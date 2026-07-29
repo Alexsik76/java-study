@@ -97,4 +97,128 @@ os.arch: amd64
 
  ``` alex@fedora:~/dev/java-study/task1$ java -jar dist/system-probe.jar арг1 арг2```
 
- 
+ ### Дослідженя коду
+
+ ```
+ javap -c -p out/ua/sikorskyi/probe/SystemProbe.class
+Compiled from "SystemProbe.java"
+public class ua.sikorskyi.probe.SystemProbe {
+  java.lang.String vendorName;
+
+  java.lang.String vendorVersion;
+
+  java.lang.String osName;
+
+  java.lang.String osArch;
+
+  int coreNumber;
+
+  long startupMemory;
+
+  long maxMemory;
+
+  long usedMemory;
+
+  java.lang.String allArgs;
+
+  public ua.sikorskyi.probe.SystemProbe(java.lang.String[]);
+    Code:
+       0: aload_0
+       1: invokespecial #20                 // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: ldc           #23                 // String Не передано
+       7: putfield      #25                 // Field allArgs:Ljava/lang/String;
+      10: aload_0
+      11: ldc           #27                 // String java.vendor
+      13: invokestatic  #29                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+      16: putfield      #35                 // Field vendorName:Ljava/lang/String;
+      19: aload_0
+      20: ldc           #37                 // String java.version
+      22: invokestatic  #29                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+      25: putfield      #39                 // Field vendorVersion:Ljava/lang/String;
+      28: aload_0
+      29: ldc           #41                 // String os.name
+      31: invokestatic  #29                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+      34: putfield      #43                 // Field osName:Ljava/lang/String;
+      37: aload_0
+      38: ldc           #45                 // String os.arch
+      40: invokestatic  #29                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+      43: putfield      #47                 // Field osArch:Ljava/lang/String;
+      46: invokestatic  #49                 // Method java/lang/Runtime.getRuntime:()Ljava/lang/Runtime;
+      49: astore_2
+      50: aload_0
+      51: aload_2
+      52: invokevirtual #55                 // Method java/lang/Runtime.availableProcessors:()I
+      55: putfield      #59                 // Field coreNumber:I
+      58: invokestatic  #61                 // Method java/lang/management/ManagementFactory.getMemoryMXBean:()Ljava/lang/management/MemoryMXBean;
+      ```
+      javap -c -p out/ua/sikorskyi/probe/SystemProbe.class
+Compiled from "SystemProbe.java"
+public class ua.sikorskyi.probe.SystemProbe {
+  java.lang.String vendorName;
+
+  java.lang.String vendorVersion;
+
+  java.lang.String osName;
+
+  java.lang.String osArch;
+
+  int coreNumber;
+
+  long startupMemory;
+
+  long maxMemory;
+
+  long usedMemory;
+
+  java.lang.String allArgs;
+
+  public ua.sikorskyi.probe.SystemProbe(java.lang.String[]);
+    Code:
+       0: aload_0
+       1: invokespecial #20                 // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: ldc           #23                 // String Не передано
+       7: putfield      #25                 // Field allArgs:Ljava/lang/String;
+      10: aload_0
+      11: ldc           #27                 // String java.vendor
+      13: invokestatic  #29                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+      16: putfield      #35                 // Field vendorName:Ljava/lang/String;
+      19: aload_0
+      20: ldc           #37                 // String java.version
+      22: invokestatic  #29                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+      25: putfield      #39                 // Field vendorVersion:Ljava/lang/String;
+      28: aload_0
+      29: ldc           #41                 // String os.name
+      31: invokestatic  #29                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+      34: putfield      #43                 // Field osName:Ljava/lang/String;
+      37: aload_0
+      38: ldc           #45                 // String os.arch
+      40: invokestatic  #29                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+      43: putfield      #47                 // Field osArch:Ljava/lang/String;
+      46: invokestatic  #49                 // Method java/lang/Runtime.getRuntime:()Ljava/lang/Runtime;
+      49: astore_2
+      50: aload_0
+      51: aload_2
+      52: invokevirtual #55                 // Method java/lang/Runtime.availableProcessors:()I
+      55: putfield      #59                 // Field coreNumber:I
+      58: invokestatic  #61                 // Method java/lang/management/ManagementFactory.getMemoryMXBean:()Ljava/lang/management/MemoryMXBean;
+```
+
+```invokevirtual``` - це вказівка виконати метод за певним номером у пулі констант.
+
+
+### Приклад виводу програми
+
+```bash
+alex@fedora:~/dev/java-study/task1$ java -jar dist/system-probe.jar арг1 арг2
+java.vendor:                        Eclipse Adoptium
+java.version:                       21.0.11
+os.name:                            Linux
+os.arch:                            amd64
+Available processors (cores):       16
+Initial memory (MB):                1008
+Maximum memory (MB):                16056
+Used memory (MB):                   0
+Arguments:                          арг1; арг2
+```
