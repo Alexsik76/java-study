@@ -81,3 +81,20 @@ os.arch: amd64
 ```
 
 ключ ```-cp``` означає "-cp <class search path of directories and zip/jar files>" - де шукати класи (усі, зокрема залежності).
+
+### Створення архіву
+
+```jar cvfm dist/system-probe.jar manifest.txt -C out .```
+
+ключі:
+ - с - створити;
+ - v - докалдний вивід;
+ - f - явно вказати ім'я jar файлу;
+ - m - використовувати файл маніфесту;
+ - С - перейти у вказану папку і зберегти в архіві структуру
+
+ ### Запуск з архіву
+
+ ``` alex@fedora:~/dev/java-study/task1$ java -jar dist/system-probe.jar арг1 арг2```
+
+ 
