@@ -41,22 +41,68 @@ Used memory (MB):                   0.00
 Arguments:                          арг1; арг2
 ```
 
+*Примітка: `Used memory: 0.00` не свідчить про порожню купу. `MemoryMXBean` підсумовує статистику пулів пам'яті збирача G1, яка оновлюється при виділенні областей; на момент вимірювання виділень ще не було. Показник `Runtime.totalMemory() - freeMemory()` у той самий момент дає близько 4 МБ. Із послідовним збирачем (`-XX:+UseSerialGC`) значення ненульове одразу.*
+
+
 # Дослідження байт-коду
 
 Фрагмент байт-коду конструктора `SystemProbe`:
 
 ```bytecode
- 0: aload_0
- 1: invokespecial #3                  // Method java/lang/Object."<init>":()V
- 4: aload_0
- 5: ldc           #31                 // String os.arch
- 7: invokestatic  #11                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
-10: putfield      #33                 // Field osArch:Ljava/lang/String;
-13: invokestatic  #36                 // Method java/lang/Runtime.getRuntime:()Ljava/lang/Runtime;
-16: astore_2
-17: aload_0
-18: aload_2
-19: invokevirtual #42                 // Method java/lang/Runtime.availableProcessors:()I
+Compiled from "SystemProbe.java"
+public class ua.sikorskyi.probe.SystemProbe {
+  private static final long BYTES_IN_MEGABYTE;
+
+  private static final int LABEL_WIDTH;
+
+  private static final java.lang.String ROW_FORMAT;
+
+  private final java.lang.String vendorName;
+
+  private final java.lang.String javaVersion;
+
+  private final java.lang.String osName;
+
+  private final java.lang.String osArch;
+
+  private final int processorCount;
+
+  private final long startupMemory;
+
+  private final long maxMemory;
+
+  private final long usedMemory;
+
+  private final java.lang.String allArgs;
+
+  public ua.sikorskyi.probe.SystemProbe(java.lang.String[]);
+    Code:
+       0: aload_0
+       1: invokespecial #3                  // Method java/lang/Object."<init>":()V
+       4: aload_0
+       5: ldc           #9                  // String java.vendor
+       7: invokestatic  #11                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+      10: putfield      #17                 // Field vendorName:Ljava/lang/String;
+      13: aload_0
+      14: ldc           #21                 // String java.version
+      16: invokestatic  #11                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+      19: putfield      #23                 // Field javaVersion:Ljava/lang/String;
+      22: aload_0
+      23: ldc           #26                 // String os.name
+      25: invokestatic  #11                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+      28: putfield      #28                 // Field osName:Ljava/lang/String;
+      31: aload_0
+      32: ldc           #31                 // String os.arch
+      34: invokestatic  #11                 // Method java/lang/System.getProperty:(Ljava/lang/String;)Ljava/lang/String;
+      37: putfield      #33                 // Field osArch:Ljava/lang/String;
+      40: invokestatic  #36                 // Method java/lang/Runtime.getRuntime:()Ljava/lang/Runtime;
+      43: astore_2
+      44: aload_0
+      45: aload_2
+      46: invokevirtual #42                 // Method java/lang/Runtime.availableProcessors:()I
+      49: putfield      #46                 // Field processorCount:I
+      52: invokestatic  #50                 // Method java/lang/management/ManagementFactory.getMemoryMXBean:()Ljava/lang/management/MemoryMXBean;
+      55: astore_3
 ```
 
 Порівняльний аналіз інструкцій виклику методів:
